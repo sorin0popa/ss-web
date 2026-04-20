@@ -85,10 +85,6 @@ func main() {
 	defer ocrClient.Close()
 	brokerHandler := broker.NewBrokerHandler(db, ocrClient)
 
-	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://broker:1883")
-	opts.SetClientID("web")
-
 	// Start the connection
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
