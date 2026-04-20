@@ -2,6 +2,7 @@ import random
 from datetime import datetime, timedelta
 import pymongo
 from bson import ObjectId
+import ssl
 
 # Database Connection
 MONGO_URI = "mongodb://admin:supersecret@localhost:27019/"
@@ -12,6 +13,26 @@ COLLECTION_NAME = "photos"
 NAMES = ["Ion", "Maria", "Andrei", "Elena", "Radu", "Ana", "George", "Ioana", "Mihai", "Cristina", "Alexandru", "Gabriela", "Florin", "Daniela", "Vlad"]
 SURNAMES = ["Popescu", "Ionescu", "Dumitru", "Stoica", "Radu", "Gheorghe", "Matei", "Florea", "Costea", "Marinescu", "Dinu", "Toma", "Stanciu", "Neagu", "Preda"]
 JOBS = ["Inginer", "Programator", "Medic", "Profesor", "Contabil", "Sofer", "Manager", "Student", "Asistent", "Operator"]
+
+PORT = 8883  # Port securizat
+
+SECRETS_DIR = os.path.join(PROJECT_ROOT, "secrets")
+CA_CRT = os.path.join(SECRETS_DIR, "ca.crt")
+CLIENT_CRT = os.path.join(SECRETS_DIR, "web.crt")
+CLIENT_KEY = os.path.join(SECRETS_DIR, "web.key")
+
+client = mqtt.Client(client_id="device-id")
+
+client.tls_set(
+    ca_certs=CA_CRT,
+    certfile=CLIENT_CRT,
+    keyfile=CLIENT_KEY,
+    tls_version=ssl.PROTOCOL_TLSv1_2
+)
+
+client.tls_insecure_set(True)
+
+client.connect(BROKER, PORT, 60)
 
 def generate_random_photo():
     timestamp = datetime.now() - timedelta(days=random.randint(0, 30))
