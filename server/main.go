@@ -20,7 +20,6 @@ import (
 import (
     "crypto/tls"
     "crypto/x509"
-    "os"
 )
 
 
